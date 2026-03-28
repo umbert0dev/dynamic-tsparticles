@@ -1,0 +1,49 @@
+{
+  "name": "dynamic-tsparticles-react",
+  "version": "0.2.0",
+  "description": "tsParticles + React: dynamic speed (slider/audio), custom mover, AudioAnalyzer.",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "keywords": [
+    "react",
+    "tsparticles",
+    "particles",
+    "web-audio",
+    "canvas"
+  ],
+  "license": "MIT",
+  "peerDependencies": {
+    "@tsparticles/engine": "^3.0.0",
+    "@tsparticles/react": "^3.0.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "tsparticles": "^3.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/umbert0dev/dynamic-tsparticles.git",
+    "directory": "packages/react"
+  },
+  "bugs": {
+    "url": "https://github.com/umbert0dev/dynamic-tsparticles/issues"
+  },
+  "homepage": "https://github.com/umbert0dev/dynamic-tsparticles#readme",
+  "scripts": {
+    "build": "vite build",
+    "prepublishOnly": "npm run build"
+  }
+}

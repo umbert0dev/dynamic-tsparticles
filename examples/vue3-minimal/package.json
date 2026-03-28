@@ -8,7 +8,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "dynamic-tsparticles": "^0.1.0",
+    "dynamic-tsparticles-vue3": "file:../../packages/vue3",
     "vue": "^3.5.12"
   },
   "devDependencies": {

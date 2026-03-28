@@ -1,0 +1,61 @@
+<div class="layout">
+  <div class="particles-wrap">
+    <dynamic-particles
+      [speed]="state.speed"
+      [isPlaying]="state.isPlaying"
+      [particlesLink]="state.particlesLink"
+      [shape]="shape()">
+    </dynamic-particles>
+  </div>
+  <div class="controls">
+    <label>
+      Speed: {{ speedUi() }}
+      <input
+        type="range"
+        min="0"
+        max="20"
+        [value]="speedUi()"
+        (input)="onSpeedInput($event)" />
+    </label>
+    <label class="row">
+      <input
+        type="checkbox"
+        [checked]="linksUi()"
+        (change)="onLinksChange($event)" />
+      Links
+    </label>
+    <label>
+      Shape
+      <select class="shape-select" (change)="onShapeChange($event)">
+        @for (opt of shapeOptions; track opt.value) {
+          <option [value]="opt.value" [selected]="opt.value === shape()">
+            {{ opt.label }}
+          </option>
+        }
+      </select>
+    </label>
+    <div class="audio-block">
+      <span class="audio-label">Audio track (optional)</span>
+      <input
+        class="file-input"
+        type="file"
+        accept="audio/*"
+        (change)="onAudioFile($event)" />
+      @if (audioUrl(); as url) {
+        <audio
+          #audioRef
+          class="audio-el"
+          [src]="url"
+          controls
+          (play)="onAudioPlay(audioRef)"
+          (pause)="onAudioStop()"
+          (ended)="onAudioStop()">
+        </audio>
+      } @else {
+        <p class="audio-hint">
+          Choose a file, then press play — particle speed follows the beat.
+        </p>
+      }
+    </div>
+  </div>
+</div>

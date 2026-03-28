@@ -1,8 +1,11 @@
 /**
- * Vue 3 adapter — import da `dynamic-tsparticles/vue3`.
- * (Futuri: `dynamic-tsparticles/react`, `dynamic-tsparticles/angular`, …)
+ * Vue 3 adapter — npm package `dynamic-tsparticles-vue3`.
  */
-export { default as DynamicSpeedMover } from "./DynamicSpeedMover";
+export {
+  DynamicSpeedMover,
+  DYNAMIC_SPEED_MOVER_ID,
+  type ParticleControlRefs,
+} from "../shared/DynamicSpeedMover";
 export { AudioAnalyzer, buildDefaultParticleOptions } from "../shared";
 export {
   createDynamicParticlesState,

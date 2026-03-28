@@ -1,0 +1,53 @@
+{
+  "name": "dynamic-tsparticles-angular",
+  "version": "0.2.0",
+  "description": "tsParticles + Angular: dynamic speed (slider/audio), custom mover, AudioAnalyzer.",
+  "module": "./dist/fesm2022/dynamic-tsparticles-angular.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "peerDependencies": {
+    "@angular/common": "^18.0.0 || ^19.0.0",
+    "@angular/core": "^18.0.0 || ^19.0.0",
+    "@tsparticles/angular": "^3.0.0",
+    "@tsparticles/engine": "^3.0.0",
+    "rxjs": "^7.8.0",
+    "tsparticles": "^3.0.0"
+  },
+  "keywords": [
+    "angular",
+    "tsparticles",
+    "particles",
+    "web-audio",
+    "canvas"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/umbert0dev/dynamic-tsparticles.git",
+    "directory": "packages/angular"
+  },
+  "bugs": {
+    "url": "https://github.com/umbert0dev/dynamic-tsparticles/issues"
+  },
+  "homepage": "https://github.com/umbert0dev/dynamic-tsparticles#readme",
+  "scripts": {
+    "prebuild": "rm -rf src/repo-shared && cp -R ../../src/shared src/repo-shared",
+    "build": "ng-packagr -p ng-package.json",
+    "prepublishOnly": "npm run build"
+  },
+  "devDependencies": {
+    "@angular/common": "^18.2.13",
+    "@angular/compiler": "^18.2.13",
+    "@angular/compiler-cli": "^18.2.13",
+    "@angular/core": "^18.2.13",
+    "@tsparticles/angular": "^3.0.0",
+    "@tsparticles/engine": "^3.9.1",
+    "ng-packagr": "^18.2.1",
+    "rxjs": "^7.8.1",
+    "tsparticles": "^3.9.1",
+    "typescript": "~5.5.4"
+  }
+}

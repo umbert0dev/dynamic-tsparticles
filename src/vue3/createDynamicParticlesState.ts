@@ -1,7 +1,11 @@
 import { ref, type Ref } from "vue";
 import { loadFull } from "tsparticles";
 import type { Engine } from "@tsparticles/engine";
-import DynamicSpeedMover from "./DynamicSpeedMover";
+import {
+  DynamicSpeedMover,
+  DYNAMIC_SPEED_MOVER_ID,
+  type ParticleControlRefs,
+} from "../shared/DynamicSpeedMover";
 
 export interface CreateDynamicParticlesStateOptions {
   /** Initial move speed (same scale as tsParticles move.speed). @default 2 */
@@ -22,7 +26,17 @@ export interface DynamicParticlesState {
   initTsParticles: (engine: Engine) => Promise<void>;
 }
 
-const MOVER_ID = "DynamicSpeedMover";
+function createVueParticleControlRefs(
+  speedRef: Ref<number>,
+  isPlayingRef: Ref<boolean>,
+  linksRef: Ref<boolean>
+): ParticleControlRefs {
+  return {
+    getSpeed: () => speedRef.value,
+    getIsPlaying: () => isPlayingRef.value,
+    getLinks: () => linksRef.value,
+  };
+}
 
 export function createDynamicParticlesState(
   options: CreateDynamicParticlesStateOptions = {}
@@ -31,11 +45,17 @@ export function createDynamicParticlesState(
   const isPlayingRef = ref(options.initialPlaying ?? false);
   const particlesLinkRef = ref(options.initialParticlesLink ?? true);
 
+  const controlRefs = createVueParticleControlRefs(
+    speedRef,
+    isPlayingRef,
+    particlesLinkRef
+  );
+
   const initTsParticles = async (engine: Engine): Promise<void> => {
     await loadFull(engine);
     await engine.addMover(
-      MOVER_ID,
-      () => Promise.resolve(new DynamicSpeedMover(speedRef, isPlayingRef, particlesLinkRef)),
+      DYNAMIC_SPEED_MOVER_ID,
+      () => Promise.resolve(new DynamicSpeedMover(controlRefs)),
       true
     );
   };

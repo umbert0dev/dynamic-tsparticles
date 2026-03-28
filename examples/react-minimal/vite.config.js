@@ -1,13 +1,13 @@
 import { fileURLToPath, URL } from "node:url";
 import { defineConfig } from "vite";
-import vue from "@vitejs/plugin-vue";
+import react from "@vitejs/plugin-react";
 
 const packageRoot = fileURLToPath(new URL("../..", import.meta.url));
 
 export default defineConfig({
-  plugins: [vue()],
+  plugins: [react()],
   optimizeDeps: {
-    include: ["dynamic-tsparticles-vue3"],
+    include: ["dynamic-tsparticles-react"],
   },
   server: {
     fs: {
