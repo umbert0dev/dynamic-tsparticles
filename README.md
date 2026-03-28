@@ -1,20 +1,19 @@
 # dynamic-tsparticles (monorepo)
 
-**Three separate npm packages** so each install only pulls the peer dependencies for that framework (Vue, React, or Angular).
+**Two separate npm packages** so each install only pulls the peer dependencies for that framework (Vue or React).
 
 | npm package | Use in |
 |-------------|--------|
 | [**`dynamic-tsparticles-vue3`**](https://www.npmjs.com/package/dynamic-tsparticles-vue3) | Vue 3 + [`@tsparticles/vue3`](https://www.npmjs.com/package/@tsparticles/vue3) |
-| [**`dynamic-tsparticles-react`**](https://www.npmjs.com/package/dynamic-tsparticles-react) | React 18 + [`@tsparticles/react`](https://www.npmjs.com/package/@tsparticles/react) |
-| [**`dynamic-tsparticles-angular`**](https://www.npmjs.com/package/dynamic-tsparticles-angular) | Angular 18+ + [`@tsparticles/angular`](https://www.npmjs.com/package/@tsparticles/angular) |
+| [**`dynamic-tsparticles-react`**](https://www.npmjs.com/package/dynamic-tsparticles-react) | React 18 + [`@tsparticles/engine`](https://www.npmjs.com/package/@tsparticles/engine) (no `@tsparticles/react` required) |
 
 Each package bundles the shared mover/audio/options code and only lists **that stack’s** peers (`tsparticles`, `@tsparticles/engine`, plus the matching UI framework and tsparticles adapter).
 
 These packages extend the [tsParticles](https://particles.js.org/) ecosystem (successor to classic [**particles.js**](https://github.com/VincentGarreau/particles.js)): custom mover, refs for speed / links / play·random, optional [Web Audio](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API) via `AudioAnalyzer`, same options model as upstream. Upstream: [tsparticles on GitHub](https://github.com/tsparticles/tsparticles).
 
-Source layout: `src/shared/`, `src/vue3/`, `src/react/`; Angular adapter lives under `packages/angular/src` (with `repo-shared` copied from `src/shared` at build time). Builds: `packages/vue3/dist`, `packages/react/dist`, `packages/angular/dist`.
+Source layout: `src/shared/`, `src/vue3/`, `src/react/`. Builds: `packages/vue3/dist`, `packages/react/dist`.
 
-**Examples** (not published): see `examples/README.md`. From repo root: `npm run example:vue3`, `example:react`, or `example:angular`.
+**Examples** (not published): see `examples/README.md`. From repo root: `npm run example:vue3` or `example:react`.
 
 ---
 
@@ -99,13 +98,13 @@ const particleOverrides = ref({
 ## React — `dynamic-tsparticles-react`
 
 ```bash
-npm install dynamic-tsparticles-react react react-dom @tsparticles/react tsparticles @tsparticles/engine
+npm install dynamic-tsparticles-react react react-dom tsparticles @tsparticles/engine
 ```
 
 ```tsx
 import { useEffect, useState } from "react";
-import { initParticlesEngine } from "@tsparticles/react";
 import {
+  initParticlesEngine,
   useDynamicParticlesState,
   DynamicParticles,
 } from "dynamic-tsparticles-react";
@@ -131,53 +130,13 @@ export function ParticlesScene() {
 }
 ```
 
-You can use **`createDynamicParticlesState()`** inside `useMemo(() => createDynamicParticlesState(), [])` instead of the hook. **`initParticlesEngine`** is re-exported from `dynamic-tsparticles-react` for convenience.
-
-## Angular — `dynamic-tsparticles-angular`
-
-```bash
-npm install dynamic-tsparticles-angular @angular/core @angular/common @tsparticles/angular tsparticles @tsparticles/engine rxjs
-```
-
-1. Call **`NgParticlesService.init(state.initTsParticles)` once** (for example in your root `App` `ngOnInit`).
-2. Bind **`createDynamicParticlesState()`** to **`dynamic-particles`** using **Angular signals** (`WritableSignal`): `[speed]`, `[isPlaying]`, `[particlesLink]` each receive the signal from the state object (not `.set` — pass the signal reference).
-
-```typescript
-import { Component, OnInit, inject, signal } from "@angular/core";
-import { NgParticlesService } from "@tsparticles/angular";
-import { createDynamicParticlesState, DynamicParticlesComponent } from "dynamic-tsparticles-angular";
-
-@Component({
-  selector: "app-root",
-  standalone: true,
-  imports: [DynamicParticlesComponent],
-  template: `
-    <dynamic-particles
-      [speed]="state.speed"
-      [isPlaying]="state.isPlaying"
-      [particlesLink]="state.particlesLink"
-      [shape]="shape()">
-    </dynamic-particles>
-  `,
-})
-export class AppComponent implements OnInit {
-  private readonly particles = inject(NgParticlesService);
-  readonly state = createDynamicParticlesState({ initialSpeed: 2, initialParticlesLink: true });
-  readonly shape = signal("triangle");
-
-  ngOnInit(): void {
-    void this.particles.init(this.state.initTsParticles);
-  }
-}
-```
-
-Optional inputs: `[options]`, `[canvasId]`, `[wrapperClass]`. Update speed in the UI with `this.state.speed.set(value)` (and the same pattern for `isPlaying` / `particlesLink`).
+You can use **`createDynamicParticlesState()`** inside `useMemo(() => createDynamicParticlesState(), [])` instead of the hook. **`initParticlesEngine`** is provided by this package (same idea as the old `@tsparticles/react` helper: it runs your callback with the shared `tsParticles` engine).
 
 ---
 
 ## Overriding defaults (`options` prop)
 
-`DynamicParticles` (Vue, React, or Angular) accepts **`options`**: a partial tsParticles object **deep-merged** over `buildDefaultParticleOptions(speed, link)`.  
+`DynamicParticles` (Vue or React) accepts **`options`**: a partial tsParticles object **deep-merged** over `buildDefaultParticleOptions(speed, link)`.  
 Typical pattern in your app:
 
 ```js
@@ -208,7 +167,7 @@ app.use(Particles, { init: state.initTsParticles });
 
 ## Audio-reactive speed
 
-Use `AudioAnalyzer`: `init(audioElement)`, on play `setInterval(() => { state.speedRef.value = analyzer.getNewAudioSpeed(state.speedRef.value) })`, `clearInterval()` on pause. In React, use `state.speedRef.current`. In Angular, use `state.speed.set(...)`.
+Use `AudioAnalyzer`: `init(audioElement)`, on play `setInterval(() => { state.speedRef.value = analyzer.getNewAudioSpeed(state.speedRef.value) })`, `clearInterval()` on pause. In React, use `state.speedRef.current`.
 
 ## API
 
@@ -231,18 +190,9 @@ Use `AudioAnalyzer`: `init(audioElement)`, on play `setInterval(() => { state.sp
 |--------|------|
 | `useDynamicParticlesState(opts?)` | Hook: refs + `initTsParticles` for `initParticlesEngine` |
 | `createDynamicParticlesState(opts?)` | Same shape; use with `useMemo` if not using the hook |
-| `initParticlesEngine` | Re-export from `@tsparticles/react` |
+| `initParticlesEngine` | `await cb(tsParticles)` — run `loadFull` / `addMover` once before mounting `DynamicParticles` |
 | `DynamicParticles` | Component wrapping `Particles` |
 | `createReactParticleControlRefs` | Build `ParticleControlRefs` from three `{ current }` refs |
-| Shared exports | `AudioAnalyzer`, `buildDefaultParticleOptions`, `DynamicSpeedMover`, `DYNAMIC_SPEED_MOVER_ID`, `ParticleControlRefs` |
-
-### `dynamic-tsparticles-angular`
-
-| Export | Role |
-|--------|------|
-| `createDynamicParticlesState(opts?)` | `WritableSignal` state + `initTsParticles` for `NgParticlesService.init` |
-| `DynamicParticlesComponent` | Standalone component wrapping `ngx-particles` |
-| `createAngularParticleControlRefs` | Build `ParticleControlRefs` from three `WritableSignal`s |
 | Shared exports | `AudioAnalyzer`, `buildDefaultParticleOptions`, `DynamicSpeedMover`, `DYNAMIC_SPEED_MOVER_ID`, `ParticleControlRefs` |
 
 ## Develop & publish
@@ -257,7 +207,6 @@ Publish **from each package** (version is in `packages/*/package.json`):
 ```bash
 npm publish --access public -w dynamic-tsparticles-vue3
 npm publish --access public -w dynamic-tsparticles-react
-npm publish --access public -w dynamic-tsparticles-angular
 ```
 
 ## License

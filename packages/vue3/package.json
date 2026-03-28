@@ -1,6 +1,6 @@
 {
   "name": "dynamic-tsparticles-vue3",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "tsParticles + Vue 3: dynamic speed (slider/audio), custom mover, AudioAnalyzer.",
   "type": "module",
   "main": "./dist/index.cjs",

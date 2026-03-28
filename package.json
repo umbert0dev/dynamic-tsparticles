@@ -1,7 +1,7 @@
 {
   "name": "dynamic-tsparticles-monorepo",
   "private": true,
-  "description": "Monorepo: `dynamic-tsparticles-vue3`, `dynamic-tsparticles-react`, `dynamic-tsparticles-angular`.",
+  "description": "Monorepo: `dynamic-tsparticles-vue3`, `dynamic-tsparticles-react`.",
   "type": "module",
   "workspaces": [
     "packages/*"
@@ -17,7 +17,6 @@
   "homepage": "https://github.com/umbert0dev/dynamic-tsparticles#readme",
   "devDependencies": {
     "@tsparticles/engine": "^3.9.1",
-    "@tsparticles/react": "^3.0.0",
     "@tsparticles/vue3": "^3.0.1",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
@@ -32,9 +31,8 @@
     "vue": "^3.5.12"
   },
   "scripts": {
-    "build": "npm run build -w dynamic-tsparticles-vue3 && npm run build -w dynamic-tsparticles-react && npm run build -w dynamic-tsparticles-angular",
+    "build": "npm run build -w dynamic-tsparticles-vue3 && npm run build -w dynamic-tsparticles-react",
     "example:vue3": "npm run build && npm install --prefix examples/vue3-minimal && npm run dev --prefix examples/vue3-minimal",
-    "example:react": "npm run build && npm install --prefix examples/react-minimal && npm run dev --prefix examples/react-minimal",
-    "example:angular": "npm run build && npm install --prefix examples/angular-minimal && npm run start --prefix examples/angular-minimal"
+    "example:react": "npm run build && npm install --prefix examples/react-minimal && npm run dev --prefix examples/react-minimal"
   }
 }

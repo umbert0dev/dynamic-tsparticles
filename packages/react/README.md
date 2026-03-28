@@ -1,13 +1,17 @@
 # dynamic-tsparticles-react
 
-React adapter for tsParticles with a dynamic-speed mover and optional Web Audio. Peer deps only: React + `@tsparticles/react` + `tsparticles` + `@tsparticles/engine`.
+React adapter for tsParticles with a dynamic-speed mover and optional Web Audio. Peers: React, `tsparticles`, `@tsparticles/engine` (no `@tsparticles/react`).
 
-Full docs: [dynamic-tsparticles (monorepo README)](https://github.com/umbert0dev/dynamic-tsparticles#readme).
+Full docs: [monorepo README](https://github.com/umbert0dev/dynamic-tsparticles#readme).
 
 ```bash
-npm install dynamic-tsparticles-react react react-dom @tsparticles/react tsparticles @tsparticles/engine
+npm install dynamic-tsparticles-react react react-dom tsparticles @tsparticles/engine
 ```
 
 ```tsx
-import { useDynamicParticlesState, DynamicParticles } from "dynamic-tsparticles-react";
+import {
+  initParticlesEngine,
+  useDynamicParticlesState,
+  DynamicParticles,
+} from "dynamic-tsparticles-react";
 ```

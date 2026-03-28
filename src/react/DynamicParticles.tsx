@@ -1,6 +1,12 @@
-import Particles from "@tsparticles/react";
-import { useCallback, useEffect, useRef, useState, type CSSProperties, type MutableRefObject } from "react";
+import { tsParticles } from "@tsparticles/engine";
 import type { Container } from "@tsparticles/engine";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  type CSSProperties,
+  type MutableRefObject,
+} from "react";
 import { buildDefaultParticleOptions } from "../shared/defaultOptions";
 
 export interface DynamicParticlesProps {
@@ -12,10 +18,13 @@ export interface DynamicParticlesProps {
   id?: string;
   className?: string;
   style?: CSSProperties;
+  /** Called once after the tsParticles container is created for this host. */
+  onParticlesLoaded?: (container: Container) => void;
 }
 
 /**
- * React counterpart of the Vue `DynamicParticles` SFC: `Particles` from `@tsparticles/react` with the same default options + shape / overrides wiring.
+ * Hosts tsParticles via `tsParticles.load({ element })` — avoids `@tsparticles/react`'s Particles component,
+ * whose effect deps remount the canvas on every parent render.
  */
 export function DynamicParticles({
   speedRef,
@@ -26,61 +35,92 @@ export function DynamicParticles({
   id = "dynamic-tsparticles",
   className,
   style,
+  onParticlesLoaded,
 }: DynamicParticlesProps) {
+  const hostRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<Container | null>(null);
-  const [particleOptions, setParticleOptions] = useState(() =>
-    buildDefaultParticleOptions(
-      speedRef.current,
-      particlesLinkRef.current,
-      options
-    )
-  );
+  const shapeRef = useRef(shape);
+  shapeRef.current = shape;
 
-  useEffect(() => {
-    setParticleOptions(
+  const onLoadedRef = useRef(onParticlesLoaded);
+  onLoadedRef.current = onParticlesLoaded;
+
+  const particleOptions = useMemo(
+    () =>
       buildDefaultParticleOptions(
         speedRef.current,
         particlesLinkRef.current,
         options
-      )
-    );
-  }, [options, speedRef, particlesLinkRef]);
-
-  const onParticlesLoaded = useCallback(
-    async (container?: Container) => {
-      containerRef.current = container ?? null;
-      const c = container ?? null;
-      if (c?.options?.particles?.shape) {
-        c.options.particles.shape.type = shape;
-        c.refresh();
-      }
-    },
-    [shape]
+      ),
+    [options, speedRef, particlesLinkRef]
   );
+
+  useEffect(() => {
+    const el = hostRef.current;
+    if (!el) return;
+
+    let cancelled = false;
+    const live = { current: undefined as Container | undefined };
+
+    void (async () => {
+      const container = await tsParticles.load({
+        id,
+        element: el,
+        options: particleOptions,
+      });
+      if (cancelled) {
+        container?.destroy();
+        return;
+      }
+      live.current = container ?? undefined;
+      containerRef.current = live.current ?? null;
+      const c = live.current;
+      if (cancelled || !c) return;
+      if (c.options?.particles?.shape) {
+        c.options.particles.shape.type = shapeRef.current;
+        await c.refresh();
+      }
+      onLoadedRef.current?.(c);
+    })();
+
+    return () => {
+      cancelled = true;
+      live.current?.destroy();
+      live.current = undefined;
+      containerRef.current = null;
+    };
+  }, [id, particleOptions]);
 
   useEffect(() => {
     const c = containerRef.current;
     if (!c?.options?.particles?.shape) return;
     c.options.particles.shape.type = shape;
-    c.refresh();
+    void c.refresh();
   }, [shape]);
 
   const wrapperClass = className ?? "dynamic-tsparticles-bg";
 
+  const wrapperStyle = useMemo(
+    () => ({
+      position: "absolute" as const,
+      width: "100%",
+      height: "100%",
+      ...style,
+    }),
+    [style]
+  );
+
   return (
-    <div
-      className={wrapperClass}
-      style={{
-        position: "absolute",
-        width: "100%",
-        height: "100%",
-        ...style,
-      }}
-    >
-      <Particles
-        id={id}
-        options={particleOptions}
-        particlesLoaded={onParticlesLoaded}
+    <div className={wrapperClass} style={wrapperStyle}>
+      <div
+        ref={hostRef}
+        className="dynamic-tsparticles-engine-host"
+        style={{
+          display: "block",
+          width: "100%",
+          height: "100%",
+          position: "relative",
+        }}
       />
     </div>
   );

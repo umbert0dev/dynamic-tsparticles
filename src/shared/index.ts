@@ -1,4 +1,4 @@
-/** Shared between framework adapters (Vue, React, Angular, …). */
+/** Shared between framework adapters (Vue, React, …). */
 export { default as AudioAnalyzer } from "./AudioAnalyzer";
 export { buildDefaultParticleOptions } from "./defaultOptions";
 export {

@@ -35,21 +35,3 @@ npm run dev
 ```
 
 Run `npm run build` from the **repository root** first so `packages/*/dist` exists.
-
-## Angular (`angular-minimal`)
-
-Uses **`dynamic-tsparticles-angular`** via `file:../../packages/angular`.
-
-From repo root:
-
-```bash
-npm run example:angular
-```
-
-Or manually (build the library first):
-
-```bash
-cd angular-minimal
-npm install
-npm start
-```

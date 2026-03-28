@@ -20,7 +20,7 @@ export interface DynamicParticlesState {
   speedRef: MutableRefObject<number>;
   isPlayingRef: MutableRefObject<boolean>;
   particlesLinkRef: MutableRefObject<boolean>;
-  /** Pass to `initParticlesEngine` from `@tsparticles/react`. */
+  /** Pass to `initParticlesEngine` from `dynamic-tsparticles-react`. */
   initTsParticles: (engine: Engine) => Promise<void>;
 }
 

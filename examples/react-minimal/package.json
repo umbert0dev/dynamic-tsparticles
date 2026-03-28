@@ -9,7 +9,6 @@
   },
   "dependencies": {
     "@tsparticles/engine": "^3.9.1",
-    "@tsparticles/react": "^3.0.0",
     "dynamic-tsparticles-react": "file:../../packages/react",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

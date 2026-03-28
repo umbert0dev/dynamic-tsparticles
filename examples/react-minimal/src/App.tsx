@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState, type ChangeEvent } from "react";
-import { initParticlesEngine } from "@tsparticles/react";
 import {
   AudioAnalyzer,
   DynamicParticles,
+  initParticlesEngine,
   useDynamicParticlesState,
 } from "dynamic-tsparticles-react";
 

@@ -15,4 +15,4 @@ export {
   type DynamicParticlesState,
 } from "./createDynamicParticlesState";
 export { DynamicParticles, type DynamicParticlesProps } from "./DynamicParticles";
-export { initParticlesEngine } from "@tsparticles/react";
+export { initParticlesEngine } from "./initParticlesEngine";
